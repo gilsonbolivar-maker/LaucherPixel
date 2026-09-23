@@ -60,7 +60,6 @@ class MainActivity : Activity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        hideStatusBar()
 
         webView = WebView(this).apply {
             setBackgroundColor(0xFF160324.toInt())
@@ -98,6 +97,8 @@ class MainActivity : Activity() {
         })
 
         setContentView(webView)
+        // Só depois do setContentView a janela tem DecorView (senão: NullPointerException)
+        hideStatusBar()
         if (savedInstanceState != null) {
             webView.restoreState(savedInstanceState)
         } else {
@@ -153,7 +154,7 @@ class MainActivity : Activity() {
 
     // A interface web já desenha a própria barra de status
     @Suppress("DEPRECATION")
-    private fun hideStatusBar() {
+    private fun hideStatusBar() = runCatching {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             window.insetsController?.let {
                 it.hide(WindowInsets.Type.statusBars())
