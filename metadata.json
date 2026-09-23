@@ -1,0 +1,10 @@
+{
+  "name": "Pixel Nexo Dev Launcher",
+  "description": "Android Launcher oficial Pixel Nexo para desenvolvedores e criadores digitais: identidade roxa e dourada, terminal interativo, GitHub CLI, Google Drive CLI, editor de código e arquitetura Kotlin nativa.",
+  "requestFramePermissions": [
+    "camera"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,52 @@
+name: Android APK
+
+on:
+  push:
+    branches: [main, 'claude/**']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build da interface web
+        run: |
+          npm install --no-audit --no-fund
+          npm run build:android
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Compilar APK
+        run: gradle -p android assembleRelease --no-daemon
+
+      - name: Renomear APK
+        run: cp android/app/build/outputs/apk/release/app-release.apk PixelNexoLauncher.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PixelNexoLauncher
+          path: PixelNexoLauncher.apk
+
+      - name: Publicar no release "apk-latest"
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-latest
+          name: Pixel Nexo Launcher (APK mais recente)
+          prerelease: true
+          files: PixelNexoLauncher.apk
